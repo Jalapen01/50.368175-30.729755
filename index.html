@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050505;
+            color: #d1d5db;
+            font-family: 'Special Elite', monospace;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Glitch and eerie text effects */
+        .horror-font {
+            font-family: 'Creepster', cursive;
+        }
+
+        .flicker {
+            animation: flickerAnimation 3s infinite;
+        }
+
+        @keyframes flickerAnimation {
+            0% { opacity: 0.8; }
+            5% { opacity: 0.2; }
+            10% { opacity: 0.9; }
+            15% { opacity: 0.3; }
+            20% { opacity: 1; }
+            50% { opacity: 0.8; }
+            80% { opacity: 0.4; }
+            90% { opacity: 0.95; }
+            100% { opacity: 0.85; }
+        }
+
+        .red-glow {
+            text-shadow: 0 0 8px rgba(220, 38, 38, 0.8), 0 0 20px rgba(153, 27, 27, 0.6);
+        }
+
+        .white-glow {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Screamer Animation Effects */
+        .shake {
+            animation: heavyShake 0.08s infinite alternate;
+        }
+
+        @keyframes heavyShake {
+            0% { transform: translate(12px, 12px) rotate(1deg); }
+            20% { transform: translate(-12px, -10px) rotate(-1deg); }
+            40% { transform: translate(-15px, 15px) rotate(0deg); }
+            60% { transform: translate(10px, -15px) rotate(2deg); }
+            80% { transform: translate(-8px, -8px) rotate(-2deg); }
+            100% { transform: translate(15px, 8px) rotate(1deg); }
+        }
+
+        .strobe-bg {
+            animation: strobeEffect 0.05s infinite;
+        }
+
+        @keyframes strobeEffect {
+            0% { background-color: #000000; }
+            50% { background-color: #3b0000; }
+            100% { background-color: #ffffff; }
+        }
+
+        /* Fade in transition */
+        .fade-in {
+            animation: fadeIn 1.2s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="w-screen h-screen flex flex-col justify-center items-center relative cursor-pointer" onclick="nextStep()" id="main-body">
+
+    <!-- Subtle vignette effect -->
+    <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_20%,_rgba(0,0,0,0.95)_100%)] z-10"></div>
+
+    <!-- Step Container -->
+    <div id="content-container" class="z-20 text-center px-4 max-w-lg w-full flex flex-col items-center justify-center min-h-[250px]">
+        
+        <!-- Coordinates (Step 1) -->
+        <div id="coords" class="text-2xl sm:text-3xl tracking-widest font-mono text-red-600 red-glow flicker mb-6">
+            50.368175, 30.729755
+        </div>
+
+        <!-- Words Sequence (Step 2, 3, 4) -->
+        <div class="flex flex-col items-center space-y-3">
+            <div id="word1" class="hidden text-3xl sm:text-4xl text-gray-200 white-glow fade-in tracking-wider">
+                Тут...
+            </div>
+            <div id="word2" class="hidden text-3xl sm:text-4xl text-gray-300 white-glow fade-in tracking-wider">
+                тут...
+            </div>
+            <div id="word3" class="hidden text-4xl sm:text-5xl text-red-700 red-glow horror-font fade-in tracking-widest">
+                тут...
+            </div>
+        </div>
+
+        <!-- Tap Prompt -->
+        <div id="tap-prompt" class="absolute bottom-10 text-xs text-gray-600 tracking-widest uppercase flicker">
+            [ торкніться екрана ]
+        </div>
+    </div>
+
+    <!-- Screamer Fullscreen Container (Step 5) -->
+    <div id="screamer-container" class="hidden fixed inset-0 z-50 w-full h-full overflow-hidden bg-black flex items-center justify-center">
+        <img id="screamer-img" 
+             src="https://media.tenor.com/R6s1Rneo5PYAAAAM/konkon-knock.gif" 
+             alt="Scary Entity" 
+             class="w-full h-full object-cover scale-110">
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        function nextStep() {
+            currentStep++;
+
+            const word1 = document.getElementById('word1');
+            const word2 = document.getElementById('word2');
+            const word3 = document.getElementById('word3');
+            const tapPrompt = document.getElementById('tap-prompt');
+            const screamerContainer = document.getElementById('screamer-container');
+            const mainBody = document.getElementById('main-body');
+            const screamerImg = document.getElementById('screamer-img');
+
+            if (currentStep === 2) {
+                // First click: Shows "Тут..."
+                word1.classList.remove('hidden');
+            } 
+            else if (currentStep === 3) {
+                // Second click: Shows "тут..."
+                word2.classList.remove('hidden');
+            } 
+            else if (currentStep === 4) {
+                // Third click: Shows third "тут..."
+                word3.classList.remove('hidden');
+                tapPrompt.style.color = '#dc2626'; // Highlight prompt in red
+            } 
+            else if (currentStep >= 5) {
+                // Fourth click: Trigger Jumpscare / Screamer without sound
+                tapPrompt.classList.add('hidden');
+                screamerContainer.classList.remove('hidden');
+                
+                // Add camera shake & strobe flash effects
+                mainBody.classList.add('strobe-bg');
+                screamerImg.classList.add('shake');
+
+                // Try entering fullscreen for maximum jumpscare effect on touch devices
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen().catch(() => {});
+                }
+            }
+        }
+    </script>
+</body>
+</html>
